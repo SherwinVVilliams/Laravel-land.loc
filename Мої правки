@@ -1,0 +1,30 @@
+Устанавлюємо додатковий пакет Forms&HTML це по суті класси для полегшеня роботи з елементами HTML. Детальніше про пакет https://laravelcollective.com/docs/version/html
+composer dump-autoload якщо неможе знайти створенний файл посєвів данних
+з дефолтного файла посєвів я визвав свій створенний
+csrf_field() - для генерування в формі скритого поля яке буде передавати токен для захисту від поддєлки запросів і для безопасності сайта
+Для того щоб убрати помилку: The page has expired due to inactivity. 
+Please refresh and try again.
+https://stackoverflow.com/questions/46149561/laravel-5-5-the-page-has-expired-due-to-inactivity-please-refresh-and-try-again
+ВАЖЛИВО: інформацію про переданий файл через POST можна подивитись не attributes a в FileBag
+
+Важливо: при передачі файла через форму. в контроллері получаємо його обьєкт з допомогою $file = $request->file('images');
+Детальніше https://laravel.com/docs/version/request#files
+
+Важливо: для копірованія файла на сервер використовується спеціальний метод $file->move(public_path().'/img', file->getClientOriginalName()); - в разі першого параметру передаємо маршрут куда копірувати в другому параметрі імя файла, public_path() - прописанний шлях до папки public нащого фреймворка
+
+для заповнення моделі данними викоростовується метод fill(array('name', 'surname' ...), але при цьому в самій моделі треба відкрити доступ до заповнення полів $fillable
+ модель:   protected $fillable = [
+    	'name', 'text', 'alias' ,'images'
+    ];
+контроллер:$page->fill($input);
+
+Валідація для редагування сторінки, щоб не викидало помилку валідації з параметром unique потрібно вказати id запису якого ми будем ігнорувати
+$validator = Validator::make($input,
+    			[
+    				'name' => 'required|max:255',
+    				'alias' => 'required|unique:pages,alias,'.$input['id'].'|max:255',
+    				'text' => 'required',
+    			]);
+
+для видалення змінної чи елемента массиву:
+unset($input['old_image']);
